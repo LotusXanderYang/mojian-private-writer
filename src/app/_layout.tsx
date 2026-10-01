@@ -4,12 +4,13 @@ import { ActivityIndicator, Alert, Pressable, Text, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { palette } from '@/constants/theme';
 import { NotesProvider, useNotes } from '@/providers/notes-provider';
 import { ScreenCaptureProvider } from '@/providers/screen-capture-provider';
+import { ThemeProvider, useAppTheme } from '@/providers/theme-provider';
 
 function AppShell() {
   const { ready, error, clearAll } = useNotes();
+  const { palette } = useAppTheme();
 
   if (!ready) {
     return (
@@ -48,9 +49,16 @@ function AppShell() {
       <Stack.Screen name="index" options={{ title: '墨笺' }} />
       <Stack.Screen name="editor/[id]" options={{ title: '编辑文稿', headerBackTitle: '文稿' }} />
       <Stack.Screen name="export/[id]" options={{ title: '导出文稿', presentation: 'formSheet', sheetGrabberVisible: true, sheetAllowedDetents: [0.75, 1] }} />
-      <Stack.Screen name="privacy" options={{ title: '隐私与安全', headerBackTitle: '文稿' }} />
+      <Stack.Screen name="settings" options={{ title: '设置', headerBackTitle: '文稿' }} />
+      <Stack.Screen name="about" options={{ title: '关于墨笺', headerBackTitle: '设置' }} />
+      <Stack.Screen name="batch-export" options={{ title: '批量导出', headerBackTitle: '文稿' }} />
     </Stack>
   );
+}
+
+function ThemedStatusBar() {
+  const { isDark } = useAppTheme();
+  return <StatusBar style={isDark ? 'light' : 'dark'} />;
 }
 
 export default function RootLayout() {
@@ -59,8 +67,10 @@ export default function RootLayout() {
       <SafeAreaProvider>
         <ScreenCaptureProvider>
           <NotesProvider>
-            <StatusBar style="dark" />
-            <AppShell />
+            <ThemeProvider>
+              <ThemedStatusBar />
+              <AppShell />
+            </ThemeProvider>
           </NotesProvider>
         </ScreenCaptureProvider>
       </SafeAreaProvider>

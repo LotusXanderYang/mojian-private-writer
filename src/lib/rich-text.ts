@@ -1,7 +1,7 @@
 const FORBIDDEN_BLOCKS = /<(script|style|iframe|object|embed|form|meta|link)[^>]*>[\s\S]*?<\/\1\s*>/gi;
 const FORBIDDEN_SINGLE_TAGS = /<(script|style|iframe|object|embed|form|input|button|meta|link)\b[^>]*\/?\s*>/gi;
 const EVENT_ATTRIBUTES = /\s+on[a-z]+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi;
-const SCRIPT_URLS = /\s+(href|src)\s*=\s*(["'])\s*(?:javascript|data):[^"']*\2/gi;
+const SCRIPT_URLS = /\s+(href|src)\s*=\s*(["'])\s*javascript:[^"']*\2/gi;
 
 export function sanitizeRichText(value: string): string {
   return value
@@ -71,7 +71,7 @@ export function markdownToHtml(value: string): string {
 }
 
 export function normalizeRichText(value: string): string {
-  const looksLikeHtml = /<\/?(?:p|div|br|strong|b|em|i|h[1-6]|blockquote|ul|ol|li)\b/i.test(value);
+  const looksLikeHtml = /<\/?(?:p|div|br|strong|b|em|i|s|strike|u|img|h[1-6]|blockquote|ul|ol|li)\b/i.test(value);
   return sanitizeRichText(looksLikeHtml ? value : markdownToHtml(value));
 }
 

@@ -3,6 +3,7 @@ import { createContext, type PropsWithChildren, use, useCallback, useEffect, use
 
 import { destroyVault, loadVault, saveVault } from '@/lib/vault-store';
 import { emptyVault, type Note, type VaultData, type VaultSettings } from '@/types/note';
+import { formatDiaryTitle } from '@/lib/date';
 
 type NotesContextValue = {
   vault: VaultData;
@@ -45,10 +46,11 @@ export function NotesProvider({ children }: PropsWithChildren) {
   const createNote = useCallback(async () => {
     const now = Date.now();
     const id = randomUUID();
-    await commit((current) => ({
-      ...current,
-      notes: [{ id, title: '', body: '', createdAt: now, updatedAt: now, pinned: false }, ...current.notes],
-    }));
+    await commit((current) => {
+      const mode = current.settings.writingMode;
+      const note: Note = { id, title: mode === 'diary' ? formatDiaryTitle(now) : '', body: '', createdAt: now, updatedAt: now, pinned: false, mode, diaryDate: mode === 'diary' ? now : undefined };
+      return { ...current, notes: [note, ...current.notes] };
+    });
     return id;
   }, [commit]);
 

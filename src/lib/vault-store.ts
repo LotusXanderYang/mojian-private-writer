@@ -4,6 +4,8 @@ import * as SecureStore from 'expo-secure-store';
 import { Platform } from 'react-native';
 
 import { emptyVault, type VaultData } from '@/types/note';
+import { editorActionIds } from '@/constants/editor-actions';
+import { themeIds } from '@/constants/theme';
 
 const PRIMARY_KEY = '@mojian:vault:plain:v2';
 const BACKUP_KEY = '@mojian:vault:plain-backup:v2';
@@ -32,6 +34,23 @@ function isVaultData(value: unknown): value is VaultData {
   if (!value || typeof value !== 'object') return false;
   const candidate = value as Partial<VaultData>;
   return candidate.version === 1 && Array.isArray(candidate.notes) && Boolean(candidate.settings);
+}
+
+function normalizeVault(vault: VaultData): VaultData {
+  const stored = vault.settings as Partial<VaultData['settings']>;
+  return {
+    ...vault,
+    notes: vault.notes.map((note) => ({ ...note, mode: note.mode === 'diary' ? 'diary' : 'essay' })),
+    settings: {
+      ...structuredClone(emptyVault.settings),
+      ...stored,
+      themeId: themeIds.includes(stored.themeId as (typeof themeIds)[number]) ? stored.themeId! : 'wood',
+      writingMode: stored.writingMode === 'diary' ? 'diary' : 'essay',
+      editorActions: Array.isArray(stored.editorActions)
+        ? stored.editorActions.filter((item): item is (typeof editorActionIds)[number] => editorActionIds.includes(item as (typeof editorActionIds)[number]))
+        : structuredClone(emptyVault.settings.editorActions),
+    },
+  };
 }
 
 function parseEnvelope(raw: string | null): VaultEnvelope | null {
@@ -84,17 +103,19 @@ async function removeLegacyStorage(): Promise<void> {
 export async function loadVault(): Promise<VaultData> {
   const plain = await loadPlainVault();
   if (plain) {
-    await saveVault(plain.vault);
+    const normalized = normalizeVault(plain.vault);
+    await saveVault(normalized);
     await removeLegacyStorage();
-    return plain.vault;
+    return normalized;
   }
 
   const encrypted = await AsyncStorage.getItem(LEGACY_VAULT_KEY);
   if (encrypted) {
     const migrated = await migrateLegacyVault(encrypted);
-    await saveVault(migrated);
+    const normalized = normalizeVault(migrated);
+    await saveVault(normalized);
     await removeLegacyStorage();
-    return migrated;
+    return normalized;
   }
 
   await removeLegacyStorage();

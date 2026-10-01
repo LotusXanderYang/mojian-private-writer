@@ -16,3 +16,11 @@ export function countWords(text: string): number {
   return chinese + latin;
 }
 
+export function formatDiaryTitle(timestamp: number): string {
+  return new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' }).format(new Date(timestamp));
+}
+
+export function formatDiaryTimestamp(timestamp: number): string {
+  return new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date(timestamp));
+}
+

@@ -6,11 +6,12 @@ import { useRef, useState } from 'react';
 import { Alert, Pressable, ScrollView, Text, View } from 'react-native';
 import { captureRef } from 'react-native-view-shot';
 
-import { palette, radii, spacing } from '@/constants/theme';
+import { radii, spacing } from '@/constants/theme';
 import { exportPdf, exportWord, shareJpg } from '@/lib/export';
 import { richTextToPlainText } from '@/lib/rich-text';
 import { useNotes } from '@/providers/notes-provider';
 import { screenCaptureProtectionKey } from '@/providers/screen-capture-provider';
+import { useAppTheme } from '@/providers/theme-provider';
 
 type ExportKind = 'pdf' | 'word' | 'jpg';
 
@@ -23,6 +24,7 @@ const formats = [
 export default function ExportScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { vault } = useNotes();
+  const { palette } = useAppTheme();
   const note = vault.notes.find((item) => item.id === id);
   const previewRef = useRef<View>(null);
   const [working, setWorking] = useState<ExportKind | null>(null);

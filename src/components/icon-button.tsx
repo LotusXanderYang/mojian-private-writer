@@ -1,11 +1,13 @@
 import type { LucideIcon } from 'lucide-react-native';
 import { Pressable, type PressableProps } from 'react-native';
 
-import { palette, radii } from '@/constants/theme';
+import { radii } from '@/constants/theme';
+import { useAppTheme } from '@/providers/theme-provider';
 
 type IconButtonProps = PressableProps & { icon: LucideIcon; label: string; tone?: 'default' | 'accent' | 'danger' };
 
 export function IconButton({ icon: Icon, label, tone = 'default', disabled, ...props }: IconButtonProps) {
+  const { palette } = useAppTheme();
   const foreground = tone === 'accent' ? palette.white : tone === 'danger' ? palette.danger : palette.ink;
   const background = tone === 'accent' ? palette.accent : palette.paperMuted;
   return (

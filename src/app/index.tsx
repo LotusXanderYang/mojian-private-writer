@@ -1,17 +1,19 @@
 import { Stack, useRouter } from 'expo-router';
-import { FilePlus2, LockKeyhole, Pin, Search, ShieldCheck } from 'lucide-react-native';
+import { FilePlus2, Files, Pin, Search, SlidersHorizontal } from 'lucide-react-native';
 import { useMemo, useState } from 'react';
 import { Alert, FlatList, Pressable, Text, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { IconButton } from '@/components/icon-button';
-import { palette, radii, spacing } from '@/constants/theme';
+import { radii, spacing } from '@/constants/theme';
 import { formatRelativeTime } from '@/lib/date';
 import { richTextToPlainText } from '@/lib/rich-text';
 import { useNotes } from '@/providers/notes-provider';
 import type { Note } from '@/types/note';
+import { useAppTheme } from '@/providers/theme-provider';
 
 function NoteCard({ note, onOpen, onActions }: { note: Note; onOpen: () => void; onActions: () => void }) {
+  const { palette } = useAppTheme();
   const preview = richTextToPlainText(note.body).replace(/\s+/g, ' ') || '轻触开始书写';
   return (
     <Pressable
@@ -38,7 +40,7 @@ function NoteCard({ note, onOpen, onActions }: { note: Note; onOpen: () => void;
         {note.pinned ? <Pin size={16} color={palette.accent} fill={palette.accent} strokeWidth={1.6} /> : null}
       </View>
       <Text numberOfLines={2} style={{ marginTop: spacing.sm, color: palette.inkSoft, fontSize: 15, lineHeight: 23 }}>{preview}</Text>
-      <Text style={{ marginTop: 'auto', paddingTop: spacing.md, color: palette.inkFaint, fontSize: 12 }}>{formatRelativeTime(note.updatedAt)}</Text>
+      <View style={{ marginTop: 'auto', paddingTop: spacing.md, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}><Text style={{ color: palette.inkFaint, fontSize: 12 }}>{formatRelativeTime(note.updatedAt)}</Text>{note.mode === 'diary' ? <Text style={{ color: palette.accent, fontSize: 11, fontWeight: '700' }}>日记</Text> : null}</View>
     </Pressable>
   );
 }
@@ -47,6 +49,7 @@ export default function LibraryScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { vault, createNote, updateNote, deleteNote } = useNotes();
+  const { palette } = useAppTheme();
   const [query, setQuery] = useState('');
   const notes = useMemo(() => vault.notes
     .filter((note) => `${note.title}\n${richTextToPlainText(note.body)}`.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()))
@@ -65,8 +68,8 @@ export default function LibraryScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: palette.background }}>
       <Stack.Screen options={{
-        headerLeft: () => <IconButton label="隐私与安全" icon={ShieldCheck} onPress={() => router.push('/privacy')} />,
-        headerRight: () => <IconButton label="新建文稿" icon={FilePlus2} onPress={addNote} />,
+        headerLeft: () => <IconButton label="设置" icon={SlidersHorizontal} onPress={() => router.push('/settings')} />,
+        headerRight: () => <View style={{ flexDirection: 'row', gap: spacing.sm }}><IconButton label="批量导出" icon={Files} onPress={() => router.push('/batch-export')} /><IconButton label="新建文稿" icon={FilePlus2} onPress={addNote} /></View>,
       }} />
       <FlatList
         data={notes}
@@ -79,10 +82,6 @@ export default function LibraryScreen() {
               <Search size={18} color={palette.inkFaint} strokeWidth={1.8} />
               <TextInput accessibilityLabel="搜索文稿" value={query} onChangeText={setQuery} placeholder="搜索标题或正文" placeholderTextColor={palette.inkFaint} returnKeyType="search" style={{ flex: 1, color: palette.ink, fontSize: 16, paddingVertical: 10 }} />
             </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm }}>
-              <LockKeyhole size={16} color={palette.success} strokeWidth={1.8} />
-              <Text style={{ color: palette.success, fontSize: 13, fontWeight: '600' }}>仅存本机 · 双副本保存 · 截屏防护</Text>
-            </View>
           </View>
         )}
         renderItem={({ item }) => <NoteCard note={item} onOpen={() => router.push(`/editor/${item.id}`)} onActions={() => actions(item)} />}
@@ -92,7 +91,7 @@ export default function LibraryScreen() {
               <FilePlus2 size={27} color={palette.accent} strokeWidth={1.7} />
             </View>
             <Text style={{ marginTop: spacing.md, color: palette.ink, fontSize: 21, fontWeight: '700' }}>{query ? '没有找到文稿' : '写下第一篇文稿'}</Text>
-            <Text style={{ marginTop: spacing.sm, color: palette.inkSoft, fontSize: 15, lineHeight: 23, textAlign: 'center' }}>{query ? '换个关键词试试' : '内容会保存在应用私有空间，不上传云端。'}</Text>
+            <Text style={{ marginTop: spacing.sm, color: palette.inkSoft, fontSize: 15, lineHeight: 23, textAlign: 'center' }}>{query ? '换个关键词试试' : '轻触右下角，开始写作。'}</Text>
           </View>
         )}
       />
