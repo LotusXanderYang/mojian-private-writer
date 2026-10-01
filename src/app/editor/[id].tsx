@@ -77,7 +77,7 @@ export default function EditorScreen() {
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={92}>
       <Stack.Screen options={{
-        title: saving ? '正在加密保存…' : '已加密保存',
+        title: saving ? '正在保存…' : '已保存',
         headerRight: () => <IconButton label="导出文稿" icon={Download} onPress={() => router.push(`/export/${note.id}`)} />,
       }} />
       <View style={{ flex: 1, backgroundColor: palette.background }}>
@@ -129,7 +129,7 @@ export default function EditorScreen() {
           />
           <View style={{ paddingHorizontal: spacing.md, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
             <Text style={{ color: palette.inkFaint, fontSize: 12 }}>{countWords(richTextToPlainText(body))} 字</Text>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}><Check size={13} color={palette.success} /><Text style={{ color: palette.success, fontSize: 12 }}>{saving ? '保存中' : '本机已加密'}</Text></View>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}><Check size={13} color={palette.success} /><Text style={{ color: palette.success, fontSize: 12 }}>{saving ? '保存中' : '本机已保存'}</Text></View>
           </View>
         </View>
       </View>

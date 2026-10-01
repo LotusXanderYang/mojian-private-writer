@@ -1,7 +1,7 @@
 import { randomUUID } from 'expo-crypto';
 import { createContext, type PropsWithChildren, use, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { destroyVault, loadVault, saveVault } from '@/lib/crypto-store';
+import { destroyVault, loadVault, saveVault } from '@/lib/vault-store';
 import { emptyVault, type Note, type VaultData, type VaultSettings } from '@/types/note';
 
 type NotesContextValue = {
@@ -30,7 +30,7 @@ export function NotesProvider({ children }: PropsWithChildren) {
         vaultRef.current = loaded;
         setVault(loaded);
       })
-      .catch(() => setError('无法读取现有文稿。旧版密钥可能已被系统清除；为避免覆盖原密文，墨笺没有自动创建新密钥。'))
+      .catch(() => setError('旧版加密文稿无法自动迁移。可能是旧密钥已经丢失；墨笺没有覆盖原数据。'))
       .finally(() => setReady(true));
   }, []);
 
@@ -38,7 +38,7 @@ export function NotesProvider({ children }: PropsWithChildren) {
     const nextVault = mutate(vaultRef.current);
     vaultRef.current = nextVault;
     setVault(nextVault);
-    saveQueue.current = saveQueue.current.then(() => saveVault(nextVault));
+    saveQueue.current = saveQueue.current.catch(() => undefined).then(() => saveVault(nextVault));
     await saveQueue.current;
   }, []);
 

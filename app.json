@@ -2,7 +2,7 @@
   "expo": {
     "name": "墨笺",
     "slug": "mojian-private-writer",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "orientation": "portrait",
     "icon": "./assets/images/mojian-icon.png",
     "userInterfaceStyle": "light",
@@ -17,14 +17,16 @@
       },
       "predictiveBackGestureEnabled": false,
       "package": "app.mojian.privatewriter",
-      "versionCode": 2,
+      "versionCode": 3,
       "blockedPermissions": [
         "android.permission.INTERNET",
         "android.permission.ACCESS_NETWORK_STATE",
         "android.permission.SYSTEM_ALERT_WINDOW",
         "android.permission.READ_EXTERNAL_STORAGE",
         "android.permission.WRITE_EXTERNAL_STORAGE",
-        "android.permission.READ_MEDIA_IMAGES"
+        "android.permission.READ_MEDIA_IMAGES",
+        "android.permission.USE_BIOMETRIC",
+        "android.permission.USE_FINGERPRINT"
       ]
     },
     "plugins": [
@@ -37,19 +39,7 @@
           "imageWidth": 76
         }
       ],
-      [
-        "expo-secure-store",
-        {
-          "configureAndroidBackup": true,
-          "faceIDPermission": "允许墨笺使用面容验证，以解锁仅保存在本机的文稿。"
-        }
-      ],
-      [
-        "expo-local-authentication",
-        {
-          "faceIDPermission": "允许墨笺使用面容验证，以解锁仅保存在本机的文稿。"
-        }
-      ],
+      "expo-secure-store",
       "expo-sharing"
     ],
     "experiments": {

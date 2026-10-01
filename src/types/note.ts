@@ -8,7 +8,6 @@ export type Note = {
 };
 
 export type VaultSettings = {
-  lockOnBackground: boolean;
   preventScreenCapture: boolean;
 };
 
@@ -22,7 +21,6 @@ export const emptyVault: VaultData = {
   version: 1,
   notes: [],
   settings: {
-    lockOnBackground: true,
     preventScreenCapture: true,
   },
 };

@@ -10,7 +10,7 @@ import { palette, radii, spacing } from '@/constants/theme';
 import { exportPdf, exportWord, shareJpg } from '@/lib/export';
 import { richTextToPlainText } from '@/lib/rich-text';
 import { useNotes } from '@/providers/notes-provider';
-import { screenCaptureProtectionKey } from '@/providers/privacy-provider';
+import { screenCaptureProtectionKey } from '@/providers/screen-capture-provider';
 
 type ExportKind = 'pdf' | 'word' | 'jpg';
 

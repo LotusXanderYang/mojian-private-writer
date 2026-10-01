@@ -81,7 +81,7 @@ export default function LibraryScreen() {
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm }}>
               <LockKeyhole size={16} color={palette.success} strokeWidth={1.8} />
-              <Text style={{ color: palette.success, fontSize: 13, fontWeight: '600' }}>仅存本机 · 已加密 · 截屏防护</Text>
+              <Text style={{ color: palette.success, fontSize: 13, fontWeight: '600' }}>仅存本机 · 双副本保存 · 截屏防护</Text>
             </View>
           </View>
         )}
@@ -92,7 +92,7 @@ export default function LibraryScreen() {
               <FilePlus2 size={27} color={palette.accent} strokeWidth={1.7} />
             </View>
             <Text style={{ marginTop: spacing.md, color: palette.ink, fontSize: 21, fontWeight: '700' }}>{query ? '没有找到文稿' : '写下第一篇文稿'}</Text>
-            <Text style={{ marginTop: spacing.sm, color: palette.inkSoft, fontSize: 15, lineHeight: 23, textAlign: 'center' }}>{query ? '换个关键词试试' : '内容会在本机加密保存，不上传云端。'}</Text>
+            <Text style={{ marginTop: spacing.sm, color: palette.inkSoft, fontSize: 15, lineHeight: 23, textAlign: 'center' }}>{query ? '换个关键词试试' : '内容会保存在应用私有空间，不上传云端。'}</Text>
           </View>
         )}
       />

@@ -4,26 +4,23 @@ import { ActivityIndicator, Alert, Pressable, Text, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { LockScreen } from '@/components/lock-screen';
 import { palette } from '@/constants/theme';
 import { NotesProvider, useNotes } from '@/providers/notes-provider';
-import { PrivacyProvider, usePrivacy } from '@/providers/privacy-provider';
+import { ScreenCaptureProvider } from '@/providers/screen-capture-provider';
 
 function AppShell() {
-  const { locked } = usePrivacy();
   const { ready, error, clearAll } = useNotes();
 
-  if (locked) return <LockScreen />;
   if (!ready) {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 12, backgroundColor: palette.background }}>
         <ActivityIndicator color={palette.accent} />
-        <Text style={{ color: palette.inkSoft }}>正在打开加密文稿…</Text>
+        <Text style={{ color: palette.inkSoft }}>正在读取本地文稿…</Text>
       </View>
     );
   }
   if (error) {
-    const resetVault = () => Alert.alert('重置本地文稿库？', '仅当旧文稿已经无法恢复时继续。重置会永久删除现有密文并创建新的本机密钥。', [
+    const resetVault = () => Alert.alert('开始使用新的本地文稿库？', '旧版数据将被永久清除。新版不再使用文稿密钥，并采用主副本与恢复副本保存。', [
       { text: '取消', style: 'cancel' },
       { text: '重置', style: 'destructive', onPress: () => void clearAll() },
     ]);
@@ -31,7 +28,7 @@ function AppShell() {
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 18, padding: 28, backgroundColor: palette.background }}>
         <Text selectable style={{ color: palette.danger, fontSize: 16, lineHeight: 25, textAlign: 'center' }}>{error}</Text>
         <Pressable accessibilityRole="button" onPress={resetVault} style={({ pressed }) => ({ minHeight: 48, justifyContent: 'center', paddingHorizontal: 20, borderRadius: 14, backgroundColor: pressed ? palette.accentPressed : palette.accent })}>
-          <Text style={{ color: palette.white, fontSize: 15, fontWeight: '700' }}>重置并继续使用</Text>
+          <Text style={{ color: palette.white, fontSize: 15, fontWeight: '700' }}>清除旧数据并继续</Text>
         </Pressable>
       </View>
     );
@@ -60,12 +57,12 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <PrivacyProvider>
+        <ScreenCaptureProvider>
           <NotesProvider>
             <StatusBar style="dark" />
             <AppShell />
           </NotesProvider>
-        </PrivacyProvider>
+        </ScreenCaptureProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );
