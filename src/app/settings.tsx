@@ -32,11 +32,11 @@ export default function SettingsScreen() {
   return (
     <ScrollView style={{ backgroundColor: palette.background }} contentContainerStyle={{ padding: spacing.md, paddingBottom: spacing.xxl, gap: spacing.xl }}>
       <View style={{ gap: spacing.md }}>
-        <SectionTitle>新建文稿模式</SectionTitle>
+        <SectionTitle>主页与新建模式</SectionTitle>
         <View style={{ flexDirection: 'row', gap: spacing.sm }}>
           {([
-            { id: 'essay' as const, label: '随笔', detail: '自由标题', icon: BookOpenText },
-            { id: 'diary' as const, label: '日记', detail: '自动标注时间', icon: NotebookPen },
+            { id: 'essay' as const, label: '随笔', detail: '只显示随笔', icon: BookOpenText },
+            { id: 'diary' as const, label: '日记', detail: '日历与时间标注', icon: NotebookPen },
           ]).map((item) => {
             const selected = vault.settings.writingMode === item.id;
             const Icon = item.icon;

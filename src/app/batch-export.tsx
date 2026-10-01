@@ -16,7 +16,8 @@ export default function BatchExportScreen() {
   const insets = useSafeAreaInsets();
   const [selected, setSelected] = useState<Set<string>>(() => new Set());
   const [working, setWorking] = useState<BatchKind | null>(null);
-  const notes = useMemo(() => [...vault.notes].sort((a, b) => b.updatedAt - a.updatedAt), [vault.notes]);
+  const mode = vault.settings.writingMode;
+  const notes = useMemo(() => vault.notes.filter((note) => (note.mode ?? 'essay') === mode).sort((a, b) => b.updatedAt - a.updatedAt), [mode, vault.notes]);
   const allSelected = notes.length > 0 && selected.size === notes.length;
   const chosen = notes.filter((note) => selected.has(note.id));
 
@@ -41,7 +42,7 @@ export default function BatchExportScreen() {
       keyExtractor={(item) => item.id}
       contentContainerStyle={{ padding: spacing.md, paddingBottom: 112 + insets.bottom, gap: spacing.sm, flexGrow: 1 }}
       ListHeaderComponent={<View style={{ gap: spacing.sm, marginBottom: spacing.sm }}>
-        <Text style={{ color: palette.inkSoft, fontSize: 14, lineHeight: 21 }}>选中多篇文稿后，可合并为一份 PDF 或 Word 文档。</Text>
+        <Text style={{ color: palette.inkSoft, fontSize: 14, lineHeight: 21 }}>当前仅显示{mode === 'diary' ? '日记' : '随笔'}。选中多篇后，可合并为一份 PDF 或 Word 文档。</Text>
         <Pressable accessibilityRole="checkbox" accessibilityState={{ checked: allSelected }} onPress={() => setSelected(allSelected ? new Set() : new Set(notes.map((note) => note.id)))} style={{ minHeight: 44, flexDirection: 'row', alignItems: 'center', gap: spacing.sm }}>
           <View style={{ width: 24, height: 24, borderRadius: 7, alignItems: 'center', justifyContent: 'center', backgroundColor: allSelected ? palette.accent : palette.paper, borderWidth: 1, borderColor: allSelected ? palette.accent : palette.borderStrong }}>{allSelected ? <Check size={16} color={palette.white} /> : null}</View>
           <Text style={{ color: palette.ink, fontSize: 15, fontWeight: '700' }}>全选 {notes.length} 篇</Text>
