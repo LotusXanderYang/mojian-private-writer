@@ -65,15 +65,13 @@ export default function ExportScreen() {
         <Text style={{ color: palette.ink, fontSize: 19, fontWeight: '700' }}>选择格式</Text>
         <Text style={{ color: palette.inkSoft, fontSize: 14, lineHeight: 21 }}>只有你主动导出时，文稿才会交给系统分享面板。</Text>
       </View>
-      <View style={{ gap: spacing.sm }}>
-        {formats.map((format) => {
+      <View style={{ paddingHorizontal: spacing.md, borderRadius: radii.md, borderWidth: 1, borderColor: palette.border, backgroundColor: palette.paper }}>
+        {formats.map((format, index) => {
           const FormatIcon = format.icon;
           const busy = working === format.kind;
           return (
-            <Pressable key={format.kind} accessibilityRole="button" accessibilityLabel={`导出为${format.title}`} disabled={Boolean(working)} onPress={() => runExport(format.kind)} style={({ pressed }) => ({ minHeight: 76, flexDirection: 'row', alignItems: 'center', gap: spacing.md, padding: spacing.md, borderRadius: radii.md, borderCurve: 'continuous', borderWidth: 1, borderColor: palette.border, backgroundColor: palette.paper, opacity: working && !busy ? 0.48 : pressed ? 0.78 : 1 })}>
-              <View style={{ width: 44, height: 44, alignItems: 'center', justifyContent: 'center', borderRadius: radii.md, backgroundColor: palette.accentTint }}>
-                {busy ? <LoaderCircle size={21} color={palette.accent} /> : <FormatIcon size={21} color={palette.accent} strokeWidth={1.8} />}
-              </View>
+            <Pressable key={format.kind} accessibilityRole="button" accessibilityLabel={`导出为${format.title}`} disabled={Boolean(working)} onPress={() => runExport(format.kind)} style={({ pressed }) => ({ minHeight: 76, flexDirection: 'row', alignItems: 'center', gap: spacing.md, borderTopWidth: index ? 1 : 0, borderTopColor: palette.border, opacity: working && !busy ? 0.42 : pressed ? 0.62 : 1 })}>
+              {busy ? <LoaderCircle size={21} color={palette.accent} /> : <FormatIcon size={21} color={palette.accent} strokeWidth={1.8} />}
               <View style={{ flex: 1 }}><Text style={{ color: palette.ink, fontSize: 16, fontWeight: '700' }}>{format.title}</Text><Text style={{ marginTop: 3, color: palette.inkSoft, fontSize: 13 }}>{format.detail}</Text></View>
               <Text style={{ color: palette.accent, fontSize: 14, fontWeight: '700' }}>{busy ? '处理中…' : '导出'}</Text>
             </Pressable>

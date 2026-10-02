@@ -23,15 +23,14 @@ function NoteCard({ note, onOpen, onActions }: { note: Note; onOpen: () => void;
       onPress={onOpen}
       onLongPress={onActions}
       style={({ pressed }) => ({
-        minHeight: 128,
+        minHeight: 120,
         padding: spacing.md,
-        borderRadius: radii.lg,
+        borderRadius: radii.md,
         borderCurve: 'continuous',
         borderWidth: 1,
         borderColor: palette.border,
         backgroundColor: palette.paper,
-        opacity: pressed ? 0.78 : 1,
-        transform: [{ scale: pressed ? 0.99 : 1 }],
+        opacity: pressed ? 0.68 : 1,
       })}
     >
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm }}>
@@ -102,10 +101,8 @@ export default function LibraryScreen() {
         renderItem={({ item }) => <NoteCard note={item} onOpen={() => router.push(`/editor/${item.id}`)} onActions={() => actions(item)} />}
         ListEmptyComponent={(
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: spacing.xl, minHeight: 360 }}>
-            <View style={{ width: 64, height: 64, alignItems: 'center', justifyContent: 'center', borderRadius: 22, borderCurve: 'continuous', backgroundColor: palette.accentTint }}>
-              <FilePlus2 size={27} color={palette.accent} strokeWidth={1.7} />
-            </View>
-            <Text style={{ marginTop: spacing.md, color: palette.ink, fontSize: 21, fontWeight: '700' }}>{query ? `没有找到${mode === 'diary' ? '日记' : '随笔'}` : `写下第一篇${mode === 'diary' ? '日记' : '随笔'}`}</Text>
+            <FilePlus2 size={29} color={palette.accent} strokeWidth={1.6} />
+            <Text style={{ marginTop: spacing.lg, color: palette.ink, fontSize: 21, fontWeight: '700' }}>{query ? `没有找到${mode === 'diary' ? '日记' : '随笔'}` : `写下第一篇${mode === 'diary' ? '日记' : '随笔'}`}</Text>
             <Text style={{ marginTop: spacing.sm, color: palette.inkSoft, fontSize: 15, lineHeight: 23, textAlign: 'center' }}>{query ? '换个关键词试试' : `轻触右下角，新建${mode === 'diary' ? '日记' : '随笔'}。`}</Text>
           </View>
         )}

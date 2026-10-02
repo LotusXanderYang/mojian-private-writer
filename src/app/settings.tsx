@@ -33,25 +33,25 @@ export default function SettingsScreen() {
     <ScrollView style={{ backgroundColor: palette.background }} contentContainerStyle={{ padding: spacing.md, paddingBottom: spacing.xxl, gap: spacing.xl }}>
       <View style={{ gap: spacing.md }}>
         <SectionTitle>主页与新建模式</SectionTitle>
-        <View style={{ flexDirection: 'row', gap: spacing.sm }}>
+        <View style={{ flexDirection: 'row', padding: 4, borderRadius: radii.md, borderWidth: 1, borderColor: palette.border, backgroundColor: palette.paperMuted }}>
           {([
             { id: 'essay' as const, label: '随笔', detail: '只显示随笔', icon: BookOpenText },
             { id: 'diary' as const, label: '日记', detail: '日历与时间标注', icon: NotebookPen },
           ]).map((item) => {
             const selected = vault.settings.writingMode === item.id;
             const Icon = item.icon;
-            return <Pressable key={item.id} accessibilityRole="radio" accessibilityState={{ checked: selected }} onPress={() => setMode(item.id)} style={({ pressed }) => ({ flex: 1, minHeight: 92, padding: spacing.md, borderRadius: radii.md, borderWidth: selected ? 2 : 1, borderColor: selected ? palette.accent : palette.border, backgroundColor: selected ? palette.accentTint : palette.paper, opacity: pressed ? 0.78 : 1 })}><Icon size={21} color={selected ? palette.accent : palette.inkSoft} /><Text style={{ marginTop: 10, color: palette.ink, fontSize: 16, fontWeight: '700' }}>{item.label}</Text><Text style={{ marginTop: 3, color: palette.inkSoft, fontSize: 12 }}>{item.detail}</Text></Pressable>;
+            return <Pressable key={item.id} accessibilityRole="radio" accessibilityState={{ checked: selected }} onPress={() => setMode(item.id)} style={({ pressed }) => ({ flex: 1, minHeight: 84, alignItems: 'center', justifyContent: 'center', borderRadius: 10, backgroundColor: selected ? palette.paper : 'transparent', borderWidth: selected ? 1 : 0, borderColor: palette.border, opacity: pressed ? 0.68 : 1 })}><Icon size={20} color={selected ? palette.accent : palette.inkSoft} /><Text style={{ marginTop: 7, color: palette.ink, fontSize: 15, fontWeight: '700' }}>{item.label}</Text><Text style={{ marginTop: 2, color: palette.inkSoft, fontSize: 12 }}>{item.detail}</Text></Pressable>;
           })}
         </View>
       </View>
 
       <View style={{ gap: spacing.md }}>
         <SectionTitle>主题颜色</SectionTitle>
-        <View style={{ gap: spacing.sm }}>
-          {themeIds.map((id) => {
+        <View style={{ paddingHorizontal: spacing.md, borderRadius: radii.md, borderWidth: 1, borderColor: palette.border, backgroundColor: palette.paper }}>
+          {themeIds.map((id, index) => {
             const theme = themes[id];
             const selected = vault.settings.themeId === id;
-            return <Pressable key={id} accessibilityRole="radio" accessibilityState={{ checked: selected }} onPress={() => setTheme(id)} style={({ pressed }) => ({ minHeight: 68, flexDirection: 'row', alignItems: 'center', gap: spacing.md, padding: 12, borderRadius: radii.md, borderWidth: selected ? 2 : 1, borderColor: selected ? palette.accent : palette.border, backgroundColor: palette.paper, opacity: pressed ? 0.78 : 1 })}><View style={{ width: 44, height: 44, borderRadius: 14, backgroundColor: theme.palette.background, borderWidth: 1, borderColor: theme.palette.border, alignItems: 'center', justifyContent: 'center' }}><View style={{ width: 18, height: 18, borderRadius: 6, backgroundColor: theme.palette.accent }} />{theme.dark ? <Moon size={13} color={theme.palette.ink} style={{ position: 'absolute', right: 3, top: 3 }} /> : null}</View><View style={{ flex: 1 }}><Text style={{ color: palette.ink, fontSize: 16, fontWeight: '700' }}>{theme.name}</Text><Text style={{ marginTop: 3, color: palette.inkSoft, fontSize: 13 }}>{theme.description}</Text></View>{selected ? <Check size={19} color={palette.accent} /> : null}</Pressable>;
+            return <Pressable key={id} accessibilityRole="radio" accessibilityState={{ checked: selected }} onPress={() => setTheme(id)} style={({ pressed }) => ({ minHeight: 68, flexDirection: 'row', alignItems: 'center', gap: spacing.md, borderTopWidth: index ? 1 : 0, borderTopColor: palette.border, opacity: pressed ? 0.62 : 1 })}><View style={{ width: 36, height: 36, borderRadius: 11, backgroundColor: theme.palette.background, borderWidth: 1, borderColor: theme.palette.border, alignItems: 'center', justifyContent: 'center' }}><View style={{ width: 14, height: 14, borderRadius: 4, backgroundColor: theme.palette.accent }} />{theme.dark ? <Moon size={11} color={theme.palette.ink} style={{ position: 'absolute', right: 2, top: 2 }} /> : null}</View><View style={{ flex: 1 }}><Text style={{ color: palette.ink, fontSize: 15, fontWeight: '700' }}>{theme.name}</Text><Text style={{ marginTop: 2, color: palette.inkSoft, fontSize: 12 }}>{theme.description}</Text></View>{selected ? <Check size={18} color={palette.accent} /> : null}</Pressable>;
           })}
         </View>
       </View>
